@@ -1,0 +1,30 @@
+/* Staggered Text · staggered-text-tw 本地等效实现的样式
+   规则：包在 @layer project 内；main.jsx 中排在 global.css 之后引入 */
+@layer project {
+  .staggered-text {
+    display: block;
+  }
+
+  /* 单行时行容器不产生额外盒模型，保持与原生文本一致的排版 */
+  .staggered-text__row {
+    display: inline;
+  }
+
+  .staggered-text--multirow .staggered-text__row {
+    display: block;
+  }
+
+  /* 初始态由 CSS 兜底隐藏，避免动画触发前的闪现；
+     WAAPI（fill: both）运行后接管每个分段的实际状态 */
+  .staggered-text__seg {
+    display: inline-block;
+    opacity: 0;
+    will-change: transform, opacity, filter;
+    backface-visibility: hidden;
+  }
+
+  /* prefers-reduced-motion：整段直接呈现终态 */
+  .staggered-text--static .staggered-text__seg {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,75 @@
+/* =========================================================
+   Tailwind v4 入口  —  桥接现有设计 token
+   ---------------------------------------------------------
+   目的：让 shadcn / React Bits 体系能直接消费项目的
+   双色 identity（绯红 #ff2d55 + 电青 #21e6ff）与暗色表面。
+
+   【层叠层顺序】必须最先声明，且位于 @import 之前：
+     theme < base < project < components < utilities
+
+   global.css（手写设计系统）被包进 `project` 层，由此得到：
+     · project > base        → 手写样式依然覆盖 Tailwind preflight
+     · utilities > project   → Tailwind 工具类可以覆盖手写样式（正常预期）
+
+   若不这样做：global.css 里的 `* { margin:0; padding:0 }` 是无 layer 规则，
+   而「无 layer 的普通声明优先级高于任何 @layer」，会压死 Tailwind 的
+   所有 m-* / p-* 工具类（shadcn 区块全靠这些）。
+   ========================================================= */
+
+@layer theme, base, project, components, utilities;
+
+@import "tailwindcss";
+
+@theme {
+  /* —— 表面 / 文字（对齐 global.css 的 :root） —— */
+  --color-base: #0b0a0c;
+  --color-base-2: #120f15;
+  --color-surface: #16121b;
+  --color-surface-2: #1d1822;
+  --color-ink: #f7f2ea;
+  --color-muted: #a39b91;
+  --color-faint: #635c54;
+
+  /* —— 描边（对齐 global.css 的 --line / --line-2） —— */
+  --color-line: rgba(247, 242, 234, 0.09);
+  --color-line-2: rgba(247, 242, 234, 0.18);
+
+  /* —— 双色 identity —— */
+  --color-accent: #ff2d55;
+  --color-accent-soft: #ff5c7d;
+  --color-accent-deep: #c00f38;
+  --color-volt: #21e6ff;
+  --color-volt-deep: #0fb6d6;
+
+  /* —— 字体 —— */
+  --font-display: "Bricolage Grotesque", "Noto Sans SC", sans-serif;
+  --font-mono: "Space Mono", "JetBrains Mono", ui-monospace, monospace;
+
+  /* —— 缓动 —— */
+  --ease-out-quint: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* shadcn 基础变量层（后续安装 registry 区块需要） */
+@layer base {
+  :root {
+    --background: var(--color-base);
+    --foreground: var(--color-ink);
+    --card: var(--color-surface);
+    --card-foreground: var(--color-ink);
+    --popover: var(--color-surface);
+    --popover-foreground: var(--color-ink);
+    --primary: var(--color-accent);
+    --primary-foreground: #150a04;
+    --secondary: var(--color-surface-2);
+    --secondary-foreground: var(--color-ink);
+    --muted: var(--color-surface-2);
+    --muted-foreground: var(--color-muted);
+    --accent: var(--color-volt);
+    --accent-foreground: #04212a;
+    --destructive: var(--color-accent-deep);
+    --border: rgba(247, 242, 234, 0.09);
+    --input: rgba(247, 242, 234, 0.18);
+    --ring: var(--color-accent);
+    --radius: 16px;
+  }
+}

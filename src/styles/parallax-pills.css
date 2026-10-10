@@ -1,0 +1,127 @@
+/* Parallax Pills —— @reactbits-starter/parallax-pills-tw 的本地等效样式
+   ------------------------------------------------------------------
+   包在 @layer project 里，与 global.css 同层：
+   这样 utilities（Tailwind 的间距工具类）仍然能压过它，
+   而它又能压过 base（preflight）。详见 MEMORY.md「CSS 层叠层顺序」。
+   注意：CSS 注释里不要写「m-*」这种带星号斜杠的字样，会提前闭合注释。 */
+@layer project {
+
+.parallax-pills {
+  position: relative;
+  /* 光标跟随靠容器上的 pointermove，容器必须能收到指针事件 */
+  pointer-events: auto;
+}
+
+.parallax-pill {
+  position: absolute;
+  box-sizing: border-box;
+  display: block;
+  will-change: transform;
+  pointer-events: none;
+  /* 入场只做淡入（位移/旋转由 JS 弹簧逐帧写 inline transform），
+     CSS 动画与 inline transform 分开，互不打架。 */
+  animation: pp-fade 260ms var(--ease-out) both;
+}
+@keyframes pp-fade {
+  from { opacity: 0; }
+  /* 终点读 --pp-op（默认 1）：扇形景深靠这个梯度，
+     写死 1 会把 JS 下发的景深梯度覆盖掉。 */
+  to   { opacity: var(--pp-op, 1); }
+}
+
+/* ---------- 离场：被替换时各自向下坠落（刻意偏离 4） ----------
+   动画作用在**独立的 translate 属性**上，而不是 transform：
+   transform 由 JS 逐帧写着（光标跟随 + 入场弹簧），两者若是同一个属性，
+   CSS 动画会整个盖掉逐帧写入，卡片下去的瞬间会先「跳」一下才对。
+   translate / rotate / scale 是独立属性，与 transform 叠加，互不干扰。
+
+   t² 采样（0/.0625/.25/.5625/1）配 linear → 越掉越快，就是重力。
+   透明度只在后半程轻轻收掉（不是收干净就完事：主要靠「顶边越出舞台下缘」
+   自然被裁走，那条时刻已由 JS 标定到动画末尾，所以不会留出多余的空白窗）。
+   每条卡片的距离/时长由 JS 按各自静止位置现算（--pp-out-dist / --pp-out-dur）。 */
+.parallax-pill--out {
+  /* 延迟由 JS 写在元素的 inline animation-delay 上（逐枚错开），
+     inline 会盖过这里的简写默认值，所以这里不写延迟。 */
+  animation: pp-out var(--pp-out-dur, .72s) linear both;
+}
+@keyframes pp-out {
+  0% {
+    translate: 0 0;
+    opacity: var(--pp-op, 1);
+  }
+  25% {
+    translate: 0 calc(var(--pp-out-dist, 400px) * 0.0625);
+    opacity: var(--pp-op, 1);
+  }
+  50% {
+    translate: 0 calc(var(--pp-out-dist, 400px) * 0.25);
+    opacity: calc(var(--pp-op, 1) * 0.98);
+  }
+  75% {
+    translate: 0 calc(var(--pp-out-dist, 400px) * 0.5625);
+    opacity: calc(var(--pp-op, 1) * 0.72);
+  }
+  100% {
+    translate: 0 var(--pp-out-dist, 400px);
+    opacity: 0;
+  }
+}
+
+/* ---------- 装饰层（disableEmptyPills=false 时才有） ---------- */
+.parallax-pill--bg {
+  z-index: 0;
+  border: 1px solid rgba(247, 242, 234, 0.05);
+}
+
+/* ---------- 官方形态：单行居中的标签胶囊 ---------- */
+.parallax-pill--label {
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px;
+  font-family: var(--font-mono);
+  letter-spacing: .08em;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* ---------- 本项目形态：胶囊标签 + 正文 + 底部灰条 ----------
+   官方药丸只有 label；这里带 body 的会渲染成卡片，
+   用来承载「项目详细」（见 ParallaxPills.jsx 文件头的刻意偏离 2）。 */
+.parallax-pill:not(.parallax-pill--label):not(.parallax-pill--bg) {
+  z-index: 2;
+  padding: 24px 16px 15px;
+  border: 1px solid rgba(247, 242, 234, 0.10);
+  background: #1b1c1f;
+  box-shadow: 0 20px 42px -24px rgba(0, 0, 0, 0.95);
+}
+/* 左上角压着的配色胶囊 —— 沿品牌双色域取色，由 JS 写 background */
+.parallax-pill__tag {
+  position: absolute; top: -9px; left: -9px;
+  padding: 3px 12px 4px;
+  border-radius: var(--r-pill);
+  font-family: var(--font-mono); font-size: var(--fs-2xs);
+  font-weight: 700; letter-spacing: .14em;
+  color: #0b0a0c;
+  white-space: nowrap;
+  box-shadow: 0 8px 18px -10px rgba(0, 0, 0, 0.9);
+}
+.parallax-pill__body {
+  display: block;
+  font-family: var(--font-mono); font-size: var(--fs-sm);
+  line-height: 1.45;
+  color: var(--text);
+  /* 窄屏正文会超过统一宽度，允许折行而不是溢出；balance 避免孤字 */
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+.parallax-pill__rule {
+  display: block;
+  margin-top: 10px;
+  width: 62%; height: 4px;
+  border-radius: 2px;
+  background: rgba(247, 242, 234, 0.10);
+}
+
+} /* @layer project */

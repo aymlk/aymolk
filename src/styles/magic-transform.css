@@ -1,0 +1,267 @@
+/* =========================================================
+   Magic Transform —— 文档飞入 / 中轴绞碎 / 右侧扇形吐出结果
+   ---------------------------------------------------------
+   对应 React Bits Starter `@reactbits-starter/magic-transform-tw` 的
+   本地等效实现（官方注册表为付费层，当前项目无密钥）。
+
+   视觉对齐官方演示图的三处关键特征：
+     1. 右侧结果是**沿对角线扇形铺开的一叠卡**，不是一行等距排列；
+     2. 每张卡左上角压着一枚**配色胶囊（pill）**，一排看过去颜色各异；
+     3. 中轴与结果卡之间散落**带旋转的小方块**（不是圆点）。
+   另：中轴是发光的竖线，文档卡是中性深灰底 + 点阵块（官方是骨架灰条）。
+
+   全部取值来自 global.css 的 :root token；双色 identity 约束：
+   绯红 --accent #ff2d55 / 电青 --volt #21e6ff。
+   胶囊取色见 magic-transform.jsx 的 PILL_SWEEP_MODE（默认沿品牌渐变插值）。
+
+   本文件在 main.jsx 中于 global.css 之后引入，因此追加进已存在的
+   `project` 层，优先级仍低于 Tailwind utilities。**不要**改由组件 import，
+   否则 project 层会先于 tailwind.css 声明，层序会整体错位。
+   ========================================================= */
+
+@layer project {
+
+/* ---------- 舞台 ---------- */
+.magic-stage {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  isolation: isolate;
+  /* 左缘必须淡出（文档是从舞台外流进来的）；右缘只留极缓的收边。 */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 6%, #000 98%, rgba(0, 0, 0, 0.5) 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 6%, #000 98%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+/* 横向流动的地面刻度：强化「流水线」的方向感 */
+.magic-stage::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line-2) 22%, var(--line-2) 78%, transparent);
+  pointer-events: none;
+}
+
+/* ---------- 中轴：官方是一条发光的竖线 ---------- */
+.magic-axis {
+  position: absolute; left: 50%; top: 0; bottom: 0; width: 2px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    var(--magic-axis, var(--accent)) 14%,
+    var(--magic-axis, var(--accent)) 86%,
+    transparent 100%
+  );
+  opacity: .9;
+  box-shadow:
+    0 0 14px 1px color-mix(in oklab, var(--magic-axis, var(--accent)) 60%, transparent),
+    0 0 46px 6px color-mix(in oklab, var(--magic-axis, var(--accent)) 26%, transparent);
+  pointer-events: none;
+}
+/* 每次节拍在中轴上炸开一道光 */
+.magic-axis__flash {
+  position: absolute; left: 50%; top: 50%;
+  width: 2px; height: 46%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(180deg, transparent, var(--magic-axis, var(--accent)), transparent);
+  animation: magic-axis-flash 620ms var(--ease-out) both;
+  pointer-events: none;
+}
+@keyframes magic-axis-flash {
+  0%   { opacity: 0; height: 8%; }
+  26%  { opacity: .95; height: 58%; }
+  100% { opacity: 0; height: 30%; }
+}
+
+/* ---------- 中轴中心块：官方是圆角方按钮 + 白色星标 ---------- */
+.magic-center {
+  position: absolute; left: 50%; top: 50%; z-index: 3;
+  transform: translate(-50%, -50%);
+  display: grid; place-items: center;
+  border: 1px solid rgba(247, 242, 234, 0.14);
+  border-radius: 16px;
+  background: #101114;
+  color: var(--text);
+  box-shadow: 0 22px 44px -26px rgba(0, 0, 0, 1);
+  animation: magic-center-pulse 700ms var(--ease-out) both;
+  pointer-events: none;
+}
+@keyframes magic-center-pulse {
+  0%   { box-shadow: 0 0 0 0 color-mix(in oklab, var(--magic-axis, var(--accent)) 55%, transparent); }
+  30%  { box-shadow: 0 0 0 14px rgba(11, 10, 12, 0), 0 0 34px 6px var(--magic-axis, var(--accent)); }
+  100% { box-shadow: 0 22px 44px -26px rgba(0, 0, 0, 1), 0 0 22px -6px var(--magic-axis, var(--accent)); }
+}
+
+/* ---------- 文档卡 ---------- */
+.magic-doc {
+  position: absolute; left: 50%; top: 50%;
+  will-change: transform;
+  pointer-events: none;
+}
+.magic-doc__inner {
+  position: relative;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-lg);
+  background: #17181b;
+  box-shadow: var(--shadow-md);
+}
+.magic-doc__media {
+  position: relative;
+  flex: 1;
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding: var(--space-4);
+}
+/* 官方文档卡上是骨架灰条 / 像素化的码点阵。
+   这里用点阵：保留可识别性，又不抢右侧结果卡的视觉重量。 */
+.magic-doc__pixels {
+  position: absolute; left: var(--space-4); top: var(--space-4);
+  width: 66%; height: 46%;
+  background-image: radial-gradient(rgba(247, 242, 234, 0.55) 1.4px, transparent 1.6px);
+  background-size: 9px 9px;
+  opacity: .5;
+  -webkit-mask-image: radial-gradient(120% 92% at 28% 26%, #000 26%, transparent 76%);
+  mask-image: radial-gradient(120% 92% at 28% 26%, #000 26%, transparent 76%);
+  pointer-events: none;
+}
+.magic-doc__media::after {
+  content: ""; position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(247, 242, 234, 0.10) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(247, 242, 234, 0.10) 1px, transparent 1px);
+  background-size: 26px 26px;
+  opacity: .22;
+  pointer-events: none;
+}
+/* 底色压到接近中性的深灰，只留一点色相倾向（官方文档卡本身是灰的） */
+.magic-doc__inner--hot .magic-doc__media {
+  background: radial-gradient(120% 100% at 18% 0%, rgba(255, 45, 85, 0.20), transparent 62%), #16171a;
+}
+.magic-doc__inner--cool .magic-doc__media {
+  background: radial-gradient(120% 100% at 82% 8%, rgba(33, 230, 255, 0.16), transparent 62%), #141619;
+}
+.magic-doc__index {
+  position: relative; z-index: 1;
+  font-family: var(--font-display); font-weight: 800;
+  font-size: var(--fs-num); line-height: .82;
+  color: rgba(247, 242, 234, 0.14);
+}
+.magic-doc__cat {
+  position: relative; z-index: 1;
+  align-self: flex-start;
+  font-family: var(--font-mono); font-size: var(--fs-2xs);
+  letter-spacing: .1em;
+  padding: 4px 10px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-pill);
+  background: rgba(11, 10, 12, 0.55);
+  backdrop-filter: blur(6px);
+}
+.magic-doc__inner--hot .magic-doc__cat { color: var(--accent); border-color: rgba(255, 45, 85, 0.4); }
+.magic-doc__inner--cool .magic-doc__cat { color: var(--volt); border-color: rgba(33, 230, 255, 0.4); }
+
+.magic-doc__body {
+  padding: var(--space-4) var(--space-5) var(--space-5);
+  border-top: 1px solid var(--line);
+}
+.magic-doc__title {
+  display: block;
+  font-family: var(--font-display); font-weight: 800;
+  font-size: var(--fs-md); line-height: 1.35;
+  color: var(--text);
+}
+.magic-doc__meta {
+  display: block; margin-top: var(--space-2);
+  font-family: var(--font-mono); font-size: var(--fs-xs);
+  color: var(--faint);
+}
+
+/* 被中轴吃掉时，断口处亮起的竖向光束（官方是被吃那张卡右缘的一道紫色光柱）。
+   --magic-burn-x = 已吃掉多少 px（从卡片右缘往回量），--magic-burn-a = 强度。 */
+.magic-doc__burn {
+  position: absolute; top: -1px; bottom: -1px;
+  right: var(--magic-burn-x, 0px);
+  width: 32px;
+  opacity: var(--magic-burn-a, 0);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklab, var(--magic-axis, var(--accent)) 62%, transparent) 58%,
+    var(--magic-axis, var(--accent))
+  );
+  transition: opacity .1s linear;
+  pointer-events: none;
+}
+
+/* ---------- 右侧结果区 ----------
+   卡片本体已经交给 ParallaxPills 渲染（.parallax-pill），
+   这里只负责把它的容器铺满舞台右半边。
+   入场「悬浮后落下」+ 鼠标跟随的物理都在 ParallaxPills 里，不再有本地动画。 */
+.magic-results {
+  position: absolute; inset: 0; z-index: 2;
+}
+/* 下面这几个类只剩 reduced-motion 的静态排版在用（见 .magic-static） */
+.magic-result__inner {
+  position: relative;
+  box-sizing: border-box;
+  width: var(--magic-result-w, 180px);
+  /* 上内边距留出胶囊压住卡片上缘的空间 */
+  padding: 24px 16px 15px;
+  border: 1px solid rgba(247, 242, 234, 0.10);
+  border-radius: 12px;
+  background: #1b1c1f;
+  box-shadow: 0 20px 42px -24px rgba(0, 0, 0, 0.95);
+}
+/* 左上角压着的配色胶囊 —— 官方演示图最醒目的一排彩色块 */
+.magic-result__pill {
+  position: absolute; top: -9px; left: -9px;
+  padding: 3px 12px 4px;
+  border-radius: var(--r-pill);
+  font-family: var(--font-mono); font-size: var(--fs-2xs);
+  font-weight: 700; letter-spacing: .14em;
+  color: #0b0a0c;
+  white-space: nowrap;
+  box-shadow: 0 8px 18px -10px rgba(0, 0, 0, 0.9);
+}
+.magic-result__body {
+  display: block;
+  font-family: var(--font-mono); font-size: var(--fs-sm);
+  line-height: 1.45;
+  color: var(--text);
+  /* 窄屏时最长的正文会超出统一宽度，允许折行而不是溢出或被截断；
+     balance 让两行长度接近，避免孤字。 */
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+/* ---------- 碎片：带旋转的小方块 ---------- */
+.magic-particle {
+  position: absolute; left: 50%; top: 50%; z-index: 4;
+  border-radius: 2px;
+  pointer-events: none;
+  animation: magic-particle var(--mp-dur, 900ms) var(--ease-out) forwards;
+}
+@keyframes magic-particle {
+  from { opacity: 1; transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+  to   {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--mp-tx)), calc(-50% + var(--mp-ty))) rotate(var(--mp-rot, 45deg)) scale(.55);
+  }
+}
+
+/* ---------- 降级：prefers-reduced-motion 下的静态版 ---------- */
+.magic-static { display: grid; gap: var(--space-8); }
+.magic-static__docs {
+  display: flex; flex-wrap: wrap; gap: var(--space-4);
+}
+.magic-static__docs .magic-doc__inner { flex: 1 1 210px; }
+.magic-static__docs .magic-doc__media { min-height: 132px; }
+.magic-static__results { display: flex; flex-wrap: wrap; gap: var(--space-6); padding-top: var(--space-2); }
+
+/* 屏读专用（替代重复文档卡的无障碍列表） */
+.magic-sr {
+  position: absolute; width: 1px; height: 1px;
+  margin: -1px; padding: 0; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
+} /* @layer project */

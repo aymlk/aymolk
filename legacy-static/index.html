@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>金浩 · 作品集 / AYMOLK — Portfolio</title>
+  <meta name="description" content="金浩个人作品集 — 信息安全与影视创作的复合型人才 portfolio。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;700;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- 顶部滚动进度条 -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- 噪点质感叠层 -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- 导航栏 -->
+  <header class="nav" id="nav">
+    <div class="container nav__inner">
+      <a href="#home" class="nav__logo" aria-label="金浩 首页">
+        <span class="nav__logo-mark">金</span>
+        <span class="nav__logo-text">AYMOLK<em>/ portfolio</em></span>
+      </a>
+      <nav class="nav__links" aria-label="主导航">
+        <a href="#home" class="nav__link">首页<span>00</span></a>
+        <a href="#about" class="nav__link">经历<span>01</span></a>
+        <a href="#work" class="nav__link">项目<span>02</span></a>
+        <a href="#skills" class="nav__link">优势<span>03</span></a>
+      </nav>
+      <a href="#contact" class="btn btn--ghost nav__cta">联系我<span class="btn__dot"></span></a>
+    </div>
+  </header>
+
+  <main>
+    <!-- 1. 全屏首页（参考：深黑底 + 绯红顶部辉光 + 巨型字标 + 手写签名） -->
+    <section class="hero" id="home">
+      <!-- 视频背景：使用 assets/hero.mp4 循环播放；粒子 canvas 作为加载前/不支持时的兜底 -->
+      <div class="hero__glow" aria-hidden="true"></div>
+      <video class="hero__video" id="heroVideo" src="assets/hero.mp4"
+             autoplay muted loop playsinline poster=""></video>
+      <canvas class="hero__canvas" id="heroCanvas" aria-hidden="true"></canvas>
+      <div class="hero__mask" aria-hidden="true"></div>
+
+      <div class="container hero__inner">
+        <div class="hero__aside hero-anim" style="--d:0ms">
+          <p class="eyebrow"><span class="eyebrow__dot"></span>信息安全 · 影视创作</p>
+          <p class="hero__lead">
+            在代码的严谨与光影的呼吸之间，<br />
+            构建可信与美的边界。
+          </p>
+          <div class="hero__actions">
+            <a href="#work" class="btn btn--solid">查看精选项目<span class="btn__arrow">→</span></a>
+            <a href="#contact" class="btn btn--ghost">取得联系</a>
+          </div>
+        </div>
+
+        <div class="hero__lockup hero-anim" style="--d:180ms">
+          <span class="hero__kicker">Portfolio</span>
+          <h1 class="hero__name">金浩</h1>
+          <span class="hero__script" aria-hidden="true">Aymolk</span>
+        </div>
+      </div>
+
+      <div class="hero__meta container hero-anim" style="--d:360ms">
+        <span class="hero__meta-item">浙江 · 杭州</span>
+        <span class="hero__meta-item">信息安全技术 / 现场工程师班</span>
+        <a href="#about" class="hero__scroll">向下滚动 <span class="hero__scroll-line"></span></a>
+      </div>
+
+      <span class="hero__sidetag" aria-hidden="true">PORTFOLIO — © 2026</span>
+    </section>
+
+    <!-- 关键词跑马灯：强化记忆点 -->
+    <section class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span>信息安全</span><span class="dot">✦</span><span class="hot">影视创作</span><span class="dot">✦</span><span>FPV 穿越机航拍</span><span class="dot">✦</span><span class="hot">等保测评</span><span class="dot">✦</span><span>商业广告</span><span class="dot">✦</span><span class="hot">亚运志愿者站长</span><span class="dot">✦</span><span>挑战杯金奖</span><span class="dot">✦</span>
+        <span>信息安全</span><span class="dot">✦</span><span class="hot">影视创作</span><span class="dot">✦</span><span>FPV 穿越机航拍</span><span class="dot">✦</span><span class="hot">等保测评</span><span class="dot">✦</span><span>商业广告</span><span class="dot">✦</span><span class="hot">亚运志愿者站长</span><span class="dot">✦</span><span>挑战杯金奖</span><span class="dot">✦</span>
+      </div>
+    </section>
+
+    <!-- 2. 个人经历 -->
+    <section class="section about" id="about">
+      <div class="container">
+        <div class="section__head">
+          <span class="section__index">01</span>
+          <span class="section__label">个人经历 / PROFILE</span>
+        </div>
+
+        <div class="about__grid">
+          <aside class="about__media reveal">
+            <div class="portrait">
+              <!-- 替换为真实照片：<img src="assets/portrait.jpg" alt="金浩"> -->
+              <div class="portrait__placeholder">
+                <span class="portrait__char">金</span>
+                <span class="portrait__sub">AYMOLK</span>
+              </div>
+              <span class="portrait__tag">浙江建设职业技术学院</span>
+            </div>
+          </aside>
+
+          <div class="about__body">
+            <h2 class="about__title reveal">
+              兼具信息安全素养与<br />影像创作力的复合型人才
+            </h2>
+            <div class="about__bio reveal">
+              <p>
+                金浩，信息安全技术专业学生，安恒数字安全产业学院现场工程师班成员。
+                在校担任班长与学生会成员，连续获得特等奖学金与"优秀学生"荣誉，
+                并在浙江省职业技能大赛信息安全评估赛道、挑战杯"人工智能+"专项赛等赛事中获奖。
+              </p>
+              <p>
+                同时深耕影视创作，曾以摄影助理、灯光助理身份参与小鹏 P7、广汽 S7、
+                一汽奥迪等品牌商业广告拍摄，熟练掌握 Premiere / 剪映剪辑，
+                并具备航拍机与穿越机（FPV）操作能力。
+              </p>
+            </div>
+
+            <ul class="about__contact reveal">
+              <li><span class="about__contact-k">邮箱</span><a href="mailto:hi@jinhaoportfolio.com">hi@jinhaoportfolio.com</a></li>
+              <li><span class="about__contact-k">电话</span><a href="tel:13800000000">138-0000-0000</a></li>
+              <li><span class="about__contact-k">城市</span><span>浙江 · 杭州</span></li>
+              <li><span class="about__contact-k">微信</span><span>Aymolk_Portfolio</span></li>
+            </ul>
+
+            <div class="stats reveal">
+              <div class="stat">
+                <span class="stat__num" data-count="12" data-suffix="+">0</span>
+                <span class="stat__label">荣誉奖项</span>
+              </div>
+              <div class="stat">
+                <span class="stat__num" data-count="5" data-suffix="+">0</span>
+                <span class="stat__label">商业拍摄项目</span>
+              </div>
+              <div class="stat">
+                <span class="stat__num" data-count="2">0</span>
+                <span class="stat__label">专业方向</span>
+              </div>
+              <div class="stat">
+                <span class="stat__num" data-count="1">0</span>
+                <span class="stat__label">亚运志愿者站长</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 精选项目 -->
+    <section class="section work" id="work">
+      <div class="container">
+        <div class="section__head">
+          <span class="section__index">02</span>
+          <span class="section__label">精选项目 / SELECTED WORK</span>
+        </div>
+        <h2 class="section__title reveal">在真实场景里，<br />把能力锻造成作品。</h2>
+
+        <div class="work__grid">
+          <article class="card card--hot reveal">
+            <div class="card__media card__media--a">
+              <span class="card__index">01</span>
+              <span class="card__cat">志愿服务 / 统筹</span>
+            </div>
+            <div class="card__body">
+              <h3 class="card__title">杭州亚运会城市侧志愿者站长</h3>
+              <p class="card__desc">统筹桐庐马术场馆城市侧志愿服务，协调现场调度与应急处理，获亚运志愿服务证书。</p>
+              <div class="card__foot">
+                <span class="card__year">2023 · 杭州</span>
+                <span class="card__go">查看 →</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card card--cool reveal">
+            <div class="card__media card__media--b">
+              <span class="card__index">02</span>
+              <span class="card__cat">信息安全 / 等保测评</span>
+            </div>
+            <div class="card__body">
+              <h3 class="card__title">信息安全等级保护评估</h3>
+              <p class="card__desc">与迪普科技协作，完成上虞区教体局、市场监督管理局、便民服务中心等单位的信息安全等级保护测评报告。</p>
+              <div class="card__foot">
+                <span class="card__year">校企合作</span>
+                <span class="card__go">查看 →</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card card--hot reveal">
+            <div class="card__media card__media--c">
+              <span class="card__index">03</span>
+              <span class="card__cat">影视摄影 / 商业广告</span>
+            </div>
+            <div class="card__body">
+              <h3 class="card__title">品牌商业广告拍摄</h3>
+              <p class="card__desc">以摄影 / 灯光助理身份参与小鹏 P7、montane、广汽 S7、智界 R7、一汽奥迪母亲节等品牌短视频广告制作。</p>
+              <div class="card__foot">
+                <span class="card__year">橙梨影视</span>
+                <span class="card__go">查看 →</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card card--cool reveal">
+            <div class="card__media card__media--d">
+              <span class="card__index">04</span>
+              <span class="card__cat">竞赛 / 人工智能+</span>
+            </div>
+            <div class="card__body">
+              <h3 class="card__title">"挑战杯"人工智能+ 金奖</h3>
+              <p class="card__desc">浙江省第十九届"挑战杯"大学生课外学术科技作品竞赛"人工智能+"专项赛金奖，打磨从选题到落地的完整链路。</p>
+              <div class="card__foot">
+                <span class="card__year">2025 · 金奖</span>
+                <span class="card__go">查看 →</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. 个人优势 -->
+    <section class="section skills" id="skills">
+      <div class="container">
+        <div class="section__head">
+          <span class="section__index">03</span>
+          <span class="section__label">个人优势 / CAPABILITIES</span>
+        </div>
+        <h2 class="section__title reveal">跨界的训练，<br />带来更稳的执行力。</h2>
+
+        <!-- Bento 网格：参考暗底+柠绿高亮卡的风格 -->
+        <div class="bento">
+          <!-- 01 宽卡：纯标题 + 大 blob（参考图顶部卡无编号行） -->
+          <article class="bento__card bento__card--wide reveal">
+            <h3 class="bento__title">完整项目主导能力<i class="bento__dot" aria-hidden="true"></i></h3>
+            <p class="bento__desc">从等保测评到漏洞评估，独立跟进安全交付全流程。</p>
+            <svg class="bento__blob" viewBox="0 0 200 200" aria-hidden="true">
+              <defs>
+                <radialGradient id="blobGrad1" cx="35%" cy="30%" r="80%">
+                  <stop offset="0%" stop-color="#e7ff96"/>
+                  <stop offset="55%" stop-color="#96b04b"/>
+                  <stop offset="100%" stop-color="#2e3323"/>
+                </radialGradient>
+              </defs>
+              <path d="M100 18 C140 8 178 40 182 84 C186 128 152 178 104 182 C56 186 20 148 18 100 C16 52 60 28 100 18 Z" fill="url(#blobGrad1)" opacity=".92"/>
+              <path d="M100 52l14 34 34 14-34 14-14 34-14-34-34-14 34-14z" fill="#f2efe6" opacity=".92"/>
+            </svg>
+          </article>
+
+          <!-- 02 宽卡 -->
+          <article class="bento__card bento__card--wide reveal">
+            <h3 class="bento__title">影像全流程执行力<i class="bento__dot" aria-hidden="true"></i></h3>
+            <p class="bento__desc">片场灯光到后期调色，熟悉商业广告的完整链路。</p>
+            <svg class="bento__blob" viewBox="0 0 200 200" aria-hidden="true">
+              <defs>
+                <radialGradient id="blobGrad2" cx="35%" cy="30%" r="80%">
+                  <stop offset="0%" stop-color="#d9f77e"/>
+                  <stop offset="60%" stop-color="#6f8a3a"/>
+                  <stop offset="100%" stop-color="#262b1c"/>
+                </radialGradient>
+              </defs>
+              <circle cx="80" cy="92" r="56" fill="url(#blobGrad2)" opacity=".9"/>
+              <circle cx="132" cy="122" r="46" fill="#7a5cff" opacity=".5"/>
+              <circle cx="140" cy="66" r="26" fill="#cdf463" opacity=".85"/>
+            </svg>
+          </article>
+
+          <!-- 03 项目统筹（暗卡：柠绿描边胶囊 + 白标题 + 星芒圆环 blob） -->
+          <article class="bento__card reveal">
+            <div class="bento__top">
+              <span class="bento__chip">03</span>
+              <span class="bento__sys">SYSTEM</span>
+            </div>
+            <h3 class="bento__title">项目统筹提效<i class="bento__dot" aria-hidden="true"></i></h3>
+            <p class="bento__desc">亚运志愿站长的统筹经验，从策划到落地全链路，善用 AI 工具提效。</p>
+            <svg class="bento__blob" viewBox="0 0 200 200" aria-hidden="true">
+              <defs>
+                <radialGradient id="blobGrad3" cx="35%" cy="30%" r="80%">
+                  <stop offset="0%" stop-color="#4d7028"/>
+                  <stop offset="55%" stop-color="#2c4018"/>
+                  <stop offset="100%" stop-color="#131a0b"/>
+                </radialGradient>
+              </defs>
+              <circle cx="130" cy="92" r="36" fill="#8b74e8" opacity=".75"/>
+              <circle cx="102" cy="116" r="62" fill="url(#blobGrad3)"/>
+              <circle cx="148" cy="64" r="19" fill="none" stroke="#cdf463" stroke-width="13"/>
+              <path d="M94 72l11 26 26 11-26 11-11 26-11-26-26-11 26-11z" fill="#eef2e4"/>
+            </svg>
+          </article>
+
+          <!-- 04 -->
+          <article class="bento__card reveal">
+            <div class="bento__top">
+              <span class="bento__chip">04</span>
+              <span class="bento__sys">SYSTEM</span>
+            </div>
+            <h3 class="bento__title">无人机航拍<i class="bento__dot" aria-hidden="true"></i></h3>
+            <p class="bento__desc">航拍机与穿越机（FPV）操作，擅长动态运镜与空中视角。</p>
+            <svg class="bento__blob" viewBox="0 0 200 200" aria-hidden="true">
+              <defs>
+                <linearGradient id="blobGrad4" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#d3f26e"/>
+                  <stop offset="100%" stop-color="#5d4fd8"/>
+                </linearGradient>
+              </defs>
+              <path d="M100 34 L160 68 L160 132 L100 166 L40 132 L40 68 Z" fill="url(#blobGrad4)" opacity=".9"/>
+              <path d="M100 34 L160 68 L100 102 L40 68 Z" fill="#e9ffa0" opacity=".95"/>
+              <path d="M40 68 L100 102 L100 166 L40 132 Z" fill="#3d4a22" opacity=".95"/>
+            </svg>
+          </article>
+
+          <!-- 05 -->
+          <article class="bento__card reveal">
+            <div class="bento__top">
+              <span class="bento__chip">05</span>
+              <span class="bento__sys">SYSTEM</span>
+            </div>
+            <h3 class="bento__title">跨界协同<i class="bento__dot" aria-hidden="true"></i></h3>
+            <p class="bento__desc">校企对接、团队管理与片场协作，能快速融入项目节奏。</p>
+            <svg class="bento__blob" viewBox="0 0 200 200" aria-hidden="true">
+              <defs>
+                <linearGradient id="blobGrad5" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#cdf463"/>
+                  <stop offset="100%" stop-color="#6a5bd8"/>
+                </linearGradient>
+              </defs>
+              <path d="M118 34 C158 44 176 84 168 122 C158 166 112 184 76 170 C44 158 32 122 46 96 C58 74 86 70 102 86 C114 98 112 118 98 124 C88 128 78 122 78 112"
+                    fill="none" stroke="url(#blobGrad5)" stroke-width="34" stroke-linecap="round" opacity=".9"/>
+            </svg>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. 整屏底部联系 -->
+    <section class="contact" id="contact">
+      <div class="container contact__inner">
+        <p class="eyebrow"><span class="eyebrow__dot"></span>取得联系 / GET IN TOUCH</p>
+        <h2 class="contact__title">一起，<br />把想法做成作品。</h2>
+        <a href="mailto:hi@jinhaoportfolio.com" class="contact__mail">hi@jinhaoportfolio.com</a>
+        <div class="contact__links">
+          <a href="tel:13800000000">电话</a>
+          <a href="#" onclick="return false;">微信 · Aymolk_Portfolio</a>
+          <a href="#" onclick="return false;">作品集 PDF</a>
+        </div>
+        <a href="mailto:hi@jinhaoportfolio.com" class="btn btn--solid contact__cta">写封邮件给我<span class="btn__arrow">→</span></a>
+      </div>
+      <footer class="contact__foot container">
+        <span>© 2026 金浩 · AYMOLK</span>
+        <span>Designed with voltage &amp; contrast.</span>
+      </footer>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
